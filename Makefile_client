@@ -1,0 +1,71 @@
+#
+# This is an example Makefile for a countwords program.  This
+# program uses both the scanner module and a counter module.
+# Typing 'make' or 'make count' will create the executable file.
+#
+
+# define some Makefile variables for the compiler and compiler flags
+# to use Makefile variables later in the Makefile: $()
+#
+#  -g    adds debugging information to the executable file
+#  -Wall turns on most, but not all, compiler warnings
+#
+# for C++ define  CC = g++
+
+CC = gcc
+CFLAGS  = -g -Wall
+RM = rm
+PACKAGE = `pkg-config --cflags --libs gtk+-3.0`
+OPTION = -export-dynamic
+
+
+# typing 'make' will invoke the first target entry in the file 
+# (in this case the all target entry)
+# you can name this target entry anything, but "default" or "all"
+# are the most commonly used names by convention
+#
+
+all: AtmClient
+
+
+AtmClient:  client_main.o client.o client_operations.o encoding.o login.o keypad.o popup.o cash_dispenser.o
+	$(CC) $(CFLAGS) -o AtmClient client_main.o client.o client_operations.o encoding.o login.o keypad.o popup.o cash_dispenser.o $(PACKAGE) $(OPTION)
+
+
+client_main.o:  client_main.c client_operations.h encoding.h login.h keypad.h popup.h client.h cash_dispenser.h
+	$(CC) $(CFLAGS) -c client_main.c $(PACKAGE) $(OPTION)
+
+
+client_operations.o:  client_operations.c client_operations.h 
+	$(CC) $(CFLAGS) -c client_operations.c
+
+
+encoding.o:  encoding.c encoding.h 
+	$(CC) $(CFLAGS) -c encoding.c
+
+cash_dispenser.o:  cash_dispenser.c cash_dispenser.h popup.h
+	$(CC) $(CFLAGS) -c cash_dispenser.c $(PACKAGE) $(OPTION)
+
+
+client.o: client.c client.h
+	$(CC) $(CFLAGS) -c client.c
+
+
+keypad.o: keypad.c keypad.h
+	$(CC) $(CFLAGS) -c keypad.c $(PACKAGE) $(OPTION)
+
+
+
+popup.o: popup.c popup.h
+	$(CC) $(CFLAGS) -c popup.c $(PACKAGE) $(OPTION)
+
+
+login.o: login.c login.h
+	$(CC) $(CFLAGS) -c login.c $(PACKAGE) $(OPTION)
+
+# To start over from scratch, type 'make clean'.  This
+# removes the executable file, as well as old .o object
+# files and *~ backup files:
+#
+clean: 
+	$(RM) AtmClient *.o

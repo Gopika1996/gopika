@@ -1,0 +1,53 @@
+#gcc -g -Wall authentication.c main.c operations.c encoding.c fetch.c serveroperations.c dbupdate.c statuscheck.c  -lsqlite3
+
+
+CC = gcc
+CFLAGS  = -g -Wall
+RM = rm
+PACKAGE = -lsqlite3
+
+all: AtmServer
+
+
+AtmServer:  server_main.o  authentication.o operations.o encoding.o fetch.o serveroperations.o dbupdate.o statuscheck.o 
+	$(CC) $(CFLAGS) -o AtmServer authentication.o server_main.o operations.o encoding.o fetch.o serveroperations.o dbupdate.o statuscheck.o  $(PACKAGE)
+
+
+server_main.o:  server_main.c authentication.h operations.h encoding.h fetch.h serveroperations.h dbupdate.h statuscheck.o
+	$(CC) $(CFLAGS) -c server_main.c $(PACKAGE) $(OPTION)
+
+
+authentication.o:  authentication.c authentication.h 
+	$(CC) $(CFLAGS) -c authentication.c
+
+
+operations.o:  operations.c operations.h 
+	$(CC) $(CFLAGS) -c operations.c
+
+
+encoding.o: encoding.c encoding.h
+	$(CC) $(CFLAGS) -c encoding.c
+
+
+fetch.o: fetch.c fetch.h
+	$(CC) $(CFLAGS) -c fetch.c $(PACKAGE) 
+
+
+
+
+serveroperations.o: serveroperations.c serveroperations.h
+	$(CC) $(CFLAGS) -c serveroperations.c $(PACKAGE) 
+
+
+
+
+dbupdate.o: dbupdate.c dbupdate.h
+	$(CC) $(CFLAGS) -c dbupdate.c $(PACKAGE) 
+
+
+statuscheck.o: statuscheck.c statuscheck.h
+	$(CC) $(CFLAGS) -c statuscheck.c $(PACKAGE) 
+
+
+clean: 
+	$(RM) AtmServer *.o *~
